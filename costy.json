@@ -1,0 +1,13 @@
+{
+"name":"Costy",
+"address":"124 High Street, Reading",
+"facilities":"hot drinks,food,power",
+"lng":-.9630884,
+"lat":51.451041,
+"days1":"Monday-Friday",
+"opening1":"8:00am",
+"closing1":"5:00pm",
+"closed1":false,
+"days2":"Saturday-Sunday",
+"closed1":true
+}

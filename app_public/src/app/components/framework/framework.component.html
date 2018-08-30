@@ -1,0 +1,21 @@
+<nav class="navbar fixed-top navbar-toggleable-md navbar-inverse">
+  <div class="container">
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarMain">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand" routerLink="">Loc8r</a>
+    <div class="navbar-collapse collapse" id="navbarMain">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item"><a class="nav-link" routerLink="about" routerLinkActive="active">About</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<div class="container">
+  <router-outlet></router-outlet>
+  <footer>
+    <div class="row">
+      <div class="col-12"><small>© Simon Holmes 2017</small></div>
+    </div>
+  </footer>
+</div>
