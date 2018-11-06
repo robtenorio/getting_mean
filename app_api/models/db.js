@@ -5,23 +5,23 @@ if (process.env.NODE_ENV === 'production') {
   dbURI = process.env.MONGODB_URI;
 }
 
-const locationsDb = mongoose.createConnection(dbURI, {useNewUrlParser: true});
+mongoose.connect(dbURI, {useNewUrlParser: true});
 
-locationsDb.on('connected', () => {
+mongoose.connection.on('connected', () => {
   console.log(`Mongoose connected to ${dbURI}`, " HELLO!");
 });
 
-locationsDb.on('error', error => {
+mongoose.connection.on('error', error => {
   console.log('Mongoose connection error:', error);
 });
 
-locationsDb.on('disconnected', () => {
+mongoose.connection.on('disconnected', () => {
   console.log('Mongoose disconnected');
 });
 
 //helper function to shutdown mongoose connection
 const gracefulShutdown = (msg, callback) => {
-  locationsDb.close( () => {
+  mongoose.connection.close( () => {
     console.log(`Mongoose disconnected through ${msg}`);
     callback();
   });
@@ -47,3 +47,4 @@ process.on('SIGTERM', () => {
 });
 
 require('./locations.js');
+require('./users.js');

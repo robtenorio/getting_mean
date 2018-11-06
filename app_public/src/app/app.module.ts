@@ -1,4 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
@@ -14,6 +15,8 @@ import { HtmlLineBreaksPipe } from './pipes/html-line-breaks.pipe';
 import { RatingStarsComponent } from './components/rating-stars/rating-stars.component';
 import { LocationDetailsComponent } from './components/location-details/location-details.component';
 import { DetailsPageComponent } from './components/details-page/details-page.component';
+import { RegisterComponent } from './components/register/register.component';
+import { LoginComponent } from './components/login/login.component';
 
 @NgModule({
   declarations: [
@@ -27,10 +30,13 @@ import { DetailsPageComponent } from './components/details-page/details-page.com
     HtmlLineBreaksPipe,
     RatingStarsComponent,
     LocationDetailsComponent,
-    DetailsPageComponent
+    DetailsPageComponent,
+    RegisterComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
+    FormsModule,
     HttpClientModule,
     RouterModule.forRoot([
       {
@@ -44,6 +50,14 @@ import { DetailsPageComponent } from './components/details-page/details-page.com
       {
         path: "location/:locationid",
         component: DetailsPageComponent
+      },
+      {
+        path: "register",
+        component: RegisterComponent
+      },
+      {
+        path: "login",
+        component: LoginComponent
       }
     ])
   ],

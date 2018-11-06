@@ -1,11 +1,8 @@
 const mongoose = require('mongoose');
-let dbURI = 'mongodb://localhost:27017/Loc8r';
-if (process.env.NODE_ENV === 'production') {
-  dbURI = process.env.MONGODB_URI;
-}
-const locationsDb = mongoose.createConnection(dbURI, {useNewUrlParser: true});
-const Loc = locationsDb.model('Location');
 const {sendJsonResponse} = require('./_miscFunctions/sharedFunctions');
+
+const Loc = mongoose.model('Location');
+const User = mongoose.model('User');
 
 // helper functions for reviewsCreate
 const _doSetAverageRating = function(location) {
@@ -37,14 +34,15 @@ const _updateAverageRating = function(locationid) {
     });
 };
 
-const _doAddReview = function(req, res, location) {
+const _doAddReview = (req, res, location, author) => {
   if (!location) {
     sendJsonResponse(res, 400, {"message" : "locationid not found"});
   } else {
+    const { rating, reviewText } = req.body;
     location.reviews.push({
-      author: req.body.author,
-      rating: req.body.rating,
-      reviewText: req.body.reviewText
+      author,
+      rating,
+      reviewText
     });
     location.save((err, location) => {
       if (err) {
@@ -59,24 +57,52 @@ const _doAddReview = function(req, res, location) {
   }
 };
 
-const reviewsCreate = function (req, res) {
-  const locationid = req.params.locationid;
-  if (locationid) {
-    Loc
-      .findById(locationid)
-      .select('reviews')
-      .exec((err, location) => {
-        if (err) {
-          sendJsonResponse(res, 400, err);
-        } else {
-          _doAddReview(req, res, location);
+const getAuthor = (req, res, callback) => {
+  if (req.payload && req.payload.email) {
+    User
+      .findOne({ email : req.payload.email })
+      .exec((err, user) => {
+        if(!user) {
+          return res
+            .status
+            .json({"message":"User not found"});
+        } else if (err) {
+          console.log(err);
+          return res
+            .status(404)
+            .json(err);
         }
-      }
-    );
+        callback(req, res, user.name);
+      });
   } else {
-    sendJsonResponse(res, 404, err);
+    return res
+      .status(404)
+      .json({"message":"User not found"});
   }
 };
+
+const reviewsCreate = function(req, res) {
+  getAuthor(req, res,
+    (req, res, userName) => {
+      const locationid = req.params.locationid;
+      if (locationid) {
+        Loc
+          .findById(locationid)
+          .select('reviews')
+          .exec((err, location) => {
+            if (err) {
+              sendJsonResponse(res, 400, err);
+            } else {
+              _doAddReview(req, res, location, userName);
+            }
+          }
+        );
+      } else {
+        sendJsonResponse(res, 404, err);
+      }
+    });
+};
+
 
 const reviewsReadOne = function (req, res) {
   if (req.params && req.params.locationid && req.params.reviewid) {

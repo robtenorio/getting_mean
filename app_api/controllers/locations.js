@@ -1,10 +1,5 @@
 const mongoose = require('mongoose');
-let dbURI = 'mongodb://localhost:27017/Loc8r';
-if (process.env.NODE_ENV === 'production') {
-  dbURI = process.env.MONGODB_URI;
-}
-const locationsDb = mongoose.createConnection(dbURI, {useNewUrlParser: true});
-const Loc = locationsDb.model('Location');
+const Loc = mongoose.model('Location');
 const {sendJsonResponse} = require('./_miscFunctions/sharedFunctions');
 
 // helper function to use in locationsListByDistance
